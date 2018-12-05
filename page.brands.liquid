@@ -15,7 +15,7 @@
      {% if page.content != blank %}{{ page.content }}{% endif %}
      <div class="brands-tabs">
        {% capture brandlist %}{% for vendor in shop.vendors %}{{ vendor.first }}, {% endfor %}{% endcapture %}
-       {% assign brands = brandlist | split: ', ' | uniq %}
+       {% assign brands = brandlist | upcase | split: ', ' | uniq %}
        
        <ul class="tabs">{% for brandletter in brands %}{% assign numbers = forloop.index0 %}
          <li><a href="#tab-{{numbers}}"{% if numbers == 0 %} class="active"{% endif %}>{{ brandletter | capitalize }}</a></li>{% endfor %}
@@ -24,7 +24,7 @@
        {% for brandletter in brands %}{% assign numbers = forloop.index0 %}
        <div id="tab-{{numbers}}" class="rte" itemprop="brands"{% if numbers == 0 %}{%else%} style="display:none;"{% endif %}>
          <ul class="vendor-list block-grid three-up mobile one-up">
-         {% for vendor in shop.vendors %}{% assign vendorf = vendor.first %}{% if vendorf == brandletter %}
+         {% for vendor in shop.vendors %}{% assign vendorf = vendor.first | upcase %}{% if vendorf == brandletter %}
            <li class="vendor-list-item">{{ vendor | link_to_vendor }}</li>
          {% endif %}{% endfor %}
          </ul>
