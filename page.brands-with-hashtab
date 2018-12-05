@@ -1,0 +1,142 @@
+{% comment %}
+-Coded by Codehouse.pk
+-Well-known shopify expert - Aaliyan Gul 2018
+-Example: https://www.overstockvapor.com/pages/all-brands
+-All numbers and special caracters to Hast tab
+{% endcomment %}
+
+<article class="site-page" data-template-page>
+  <header class="page-masthead">
+    <h1 class="page-title">
+      {{ page.title }}
+    </h1>
+  </header>
+
+  <div class="page-content rte" style="max-width: 1440px;">
+     {% if page.content != blank %}{{ page.content }}{% endif %}
+     <div class="brands-tabs">
+       {% capture brandlist %}{% for vendor in shop.vendors %}{{ vendor.first }}, {% endfor %}{% endcapture %}
+       {% assign brands = brandlist | upcase | remove: '1' | remove: '2' | remove: '3' | remove: '4' | remove: '5' | remove: '6' | remove: '7' | remove: '8' | remove: '9' | remove: '0' | remove: '@' | remove: '&' | split: ', ' | uniq %}
+       
+       <ul class="tabs">{% for brandletter in brands %}{% assign numbers = forloop.index0 %}
+         <li><a href="#tab-{{numbers}}"{% if numbers == 0 %} class="active"{% endif %}>{% if numbers == 0 %}#{% else %}{{ brandletter | capitalize }}{% endif %}</a></li>{% endfor %}
+       </ul>
+            
+       {% for brandletter in brands %}{% assign numbers = forloop.index0 %}
+       <div id="tab-{{numbers}}" class="rte" itemprop="brands"{% if numbers == 0 %}{%else%} style="display:none;"{% endif %}>
+         <ul class="vendor-list block-grid three-up mobile one-up">
+         {% for vendor in shop.vendors %}{% assign vendorf = vendor.first | upcase %}
+           {% if numbers == 0 %}{% if vendorf == '1' or vendorf == '2' or vendorf == '3' or vendorf == '4' or vendorf == '5' or vendorf == '6' or vendorf == '7' or vendorf == '8' or vendorf == '9' or vendorf == '0' or vendorf == '@' or vendorf == '&' %}
+           <li class="vendor-list-item">{{ vendor | link_to_vendor }}</li>
+           {% endif %}{% else %}{% if vendorf == brandletter %}
+           <li class="vendor-list-item">{{ vendor | link_to_vendor }}</li>
+           {% endif %}{% endif %}{% endfor %}
+         </ul>
+       </div>{% endfor %}
+       
+     </div>
+  </div>
+  
+</article>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('.brands-tabs ul.tabs').each(function(){
+      var active, content, links = $(this).find('a');
+      active = links.first().addClass('active');
+      content = $(active.attr('href'));
+      links.not(':first').each(function () {
+        $($(this).attr('href')).hide();
+      });
+      $(this).find('a').click(function(e){
+        active.removeClass('active');
+        content.hide();
+        active = $(this);
+        content = $($(this).attr('href'));
+        active.addClass('active');
+        content.show();
+        return false;
+      });
+    });
+  });
+</script>
+<style>
+  ul.tabs {
+  border-bottom: 1px solid #DDDDDD;
+  display: block;
+  margin: 0 0 20px;
+  padding: 0;
+}
+ul.tabs li {
+  margin: 0 !important;
+  display: block;
+  float: left;
+  height: 30px;
+  margin-bottom: 0;
+  padding: 0;
+  width: auto;
+}
+ul.tabs li a {
+  -moz-border-bottom-colors: none;
+  -moz-border-image: none;
+  -moz-border-left-colors: none;
+  -moz-border-right-colors: none;
+  -moz-border-top-colors: none;
+  background: none repeat scroll 0 0 #F5F5F5;
+  border-color: #DDDDDD !important;
+  border-style: solid;
+  border-width: 1px 1px 0 1px;
+  display: block;
+  font-size: 13px;
+  height: 29px;
+  line-height: 30px;
+  margin: 0;
+  padding: 0 20px;
+  text-decoration: none;
+  width: auto;
+  color: #303030;
+  border-bottom:none !important;
+}
+ul.tabs li a.active {
+  background: none repeat scroll 0 0 #000000;
+  border-left-width: 1px;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  color: #ffffff;
+  height: 35px;
+  margin: 0 0 0 -1px;
+  padding-top: 4px;
+  position: relative;
+  top: -4px;
+}
+ul.tabs li:first-child a.active {
+  margin-left: 0;
+}
+ul.tabs li:first-child a {
+  border-top-left-radius: 2px;
+  border-width: 1px 1px 0;
+}
+ul.tabs li:last-child a {
+  border-top-right-radius: 2px;
+}
+ul.tabs:before, ul.tabs:after {
+  content: " ";
+  display: block;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  width: 0;
+}
+ul.tabs:after {
+  clear: both;
+}
+.brands-tabs ul.vendor-list {
+    -webkit-column-count: 4;
+    -moz-column-count: 4;
+    column-count: 4;
+}
+.brands-tabs li.vendor-list-item a {
+  color: #000;
+  text-transform: capitalize;
+}
+</style>
